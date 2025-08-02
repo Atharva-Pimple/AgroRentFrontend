@@ -32,10 +32,11 @@ export function getUserRole() {
 
   try {
     const decoded = jwtDecode(token);
-    return decoded?.authorities?.[0] || null; // assuming single role
+    return decoded?.authorities?.[0] || null; 
   } catch (error) {
     console.error("Invalid token", error);
     return null;
   }
 }
+
 
