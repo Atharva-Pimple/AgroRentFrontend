@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppNavbar from "./components/NavigationBar";
 import { SignIn } from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import Home from "./components/Home";
 
 function App() {
 
@@ -9,8 +10,7 @@ function App() {
     <BrowserRouter>
       <AppNavbar/>
       <Routes>
-        {/* <Route path="/" element={<Home />} />
-        Define other routes here */}
+        <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="/signup" element={<SignUp/>}/>
       </Routes>
