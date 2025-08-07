@@ -4,8 +4,9 @@
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   color: #212529;
+  min-height: 100vh;
 }
 
 body {
@@ -15,12 +16,16 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
+
 #root {
   height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
 }
 
 a {
@@ -35,12 +40,10 @@ a:hover {
 button {
   font-family: inherit;
 }
-/* 
-html, body, #root {
-  height: 100%;
-}
 
-#root {
-  display: flex;
-  flex-direction: column;
-} */
+/* Ensure all main containers take full width */
+.main-content {
+  width: 100%;
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
