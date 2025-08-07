@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllEquipment, getSingleEquipment } from '../services/EquipmentService';
+import { createBooking } from '../services/BookingService';
 import './Home.css';
 import { getToken } from "../services/UserServices"
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 
 const Home = () => {
     const [equipment, setEquipment] = useState([]);
@@ -14,6 +16,8 @@ const Home = () => {
     const [selectedEquipment, setSelectedEquipment] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [modalLoading, setModalLoading] = useState(false);
+    const [bookingLoading, setBookingLoading] = useState(false);
+    const [bookingMessage, setBookingMessage] = useState(null);
     const [bookingData, setBookingData] = useState({
         startDate: '',
         endDate: ''
@@ -46,6 +50,7 @@ const Home = () => {
     const handleRentClick = async (equipmentId) => {
         try {
             setModalLoading(true);
+            setBookingMessage(null);
             const response = await getSingleEquipment(equipmentId);
             setSelectedEquipment(response.data);
             setShowModal(true);
@@ -61,6 +66,7 @@ const Home = () => {
         setShowModal(false);
         setSelectedEquipment(null);
         setBookingData({ startDate: '', endDate: '' });
+        setBookingMessage(null);
     };
 
     const handleInputChange = (e) => {
@@ -69,12 +75,17 @@ const Home = () => {
             ...prev,
             [name]: value
         }));
+        // Clear any previous booking messages when user changes dates
+        setBookingMessage(null);
     };
 
-    const handleBookEquipment = () => {
+    const validateDates = () => {
         if (!bookingData.startDate || !bookingData.endDate) {
-            alert('Please select both start and end dates.');
-            return;
+            setBookingMessage({
+                type: 'danger',
+                text: 'Please select both start and end dates.'
+            });
+            return false;
         }
 
         const startDate = new Date(bookingData.startDate);
@@ -83,31 +94,73 @@ const Home = () => {
         today.setHours(0, 0, 0, 0);
 
         if (startDate < today) {
-            alert('Start date cannot be in the past.');
-            return;
+            setBookingMessage({
+                type: 'danger',
+                text: 'Start date cannot be in the past.'
+            });
+            return false;
         }
 
         if (endDate <= startDate) {
-            alert('End date must be after start date.');
+            setBookingMessage({
+                type: 'danger',
+                text: 'End date must be after start date.'
+            });
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleBookEquipment = async () => {
+        if (!validateDates()) {
             return;
         }
 
-        // Calculate total days and price
-        const daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-        const totalPrice = daysDiff * selectedEquipment.rentalPrice;
+        try {
+            setBookingLoading(true);
+            setBookingMessage(null);
 
-        // Here you would typically make an API call to book the equipment
-        console.log('Booking equipment:', {
-            equipmentId: selectedEquipment.id,
-            equipmentName: selectedEquipment.name,
-            startDate: bookingData.startDate,
-            endDate: bookingData.endDate,
-            totalDays: daysDiff,
-            totalPrice: totalPrice
-        });
+            const bookingRequest = {
+                startDate: bookingData.startDate,
+                endDate: bookingData.endDate,
+                equipmentId: selectedEquipment.id,
+                totalAmount: selectedEquipment.rentalPrice
+            };
 
-        alert(`Booking successful! Total price: ₹${totalPrice} for ${daysDiff} days.`);
-        handleCloseModal();
+            const response = await createBooking(bookingRequest);
+
+            if (response.status === 201) {
+                setBookingMessage({
+                    type: 'success',
+                    text: response.data.message || 'Booking request submitted successfully!'
+                });
+                
+                // Refresh equipment list to update availability
+                fetchEquipment();
+                
+                // Close modal after a short delay to show success message
+                setTimeout(() => {
+                    handleCloseModal();
+                }, 3000);
+            }
+        } catch (err) {
+            console.error('Error creating booking:', err);
+            
+            if (err.response && err.response.data && err.response.data.message) {
+                setBookingMessage({
+                    type: 'danger',
+                    text: err.response.data.message
+                });
+            } else {
+                setBookingMessage({
+                    type: 'danger',
+                    text: 'Failed to create booking. Please try again.'
+                });
+            }
+        } finally {
+            setBookingLoading(false);
+        }
     };
 
     if (loading) {
@@ -131,7 +184,7 @@ const Home = () => {
     }
 
     return (
-        <div className="home-container mt-5">
+        <div className="home-container main-content mt-5">
             <div className="home-header">
                 <h1>Available Equipment</h1>
                 <p>Browse and rent agricultural equipment for your farming needs</p>
@@ -196,6 +249,13 @@ const Home = () => {
                         </div>
                     ) : selectedEquipment ? (
                         <div className="equipment-details">
+                            {/* Booking Message Alert */}
+                            {bookingMessage && (
+                                <Alert variant={bookingMessage.type} className="mb-3">
+                                    {bookingMessage.text}
+                                </Alert>
+                            )}
+
                             <div className="row">
                                 <div className="col-md-6">
                                     <img 
@@ -245,6 +305,20 @@ const Home = () => {
                                                         min={bookingData.startDate || new Date().toISOString().split('T')[0]}
                                                     />
                                                 </Form.Group>
+                                                
+                                                {/* Price Preview */}
+                                                {bookingData.startDate && bookingData.endDate && (
+                                                    <div className="price-preview mb-3">
+                                                        <strong>Total Price Preview:</strong>
+                                                        {(() => {
+                                                            const startDate = new Date(bookingData.startDate);
+                                                            const endDate = new Date(bookingData.endDate);
+                                                            const daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                                                            const totalPrice = daysDiff * selectedEquipment.rentalPrice;
+                                                            return ` ₹${totalPrice} for ${daysDiff} day${daysDiff > 1 ? 's' : ''}`;
+                                                        })()}
+                                                    </div>
+                                                )}
                                             </Form>
                                         </div>
                                     )}
@@ -258,8 +332,12 @@ const Home = () => {
                         Close
                     </Button>
                     {selectedEquipment && selectedEquipment.available && (
-                        <Button variant="primary" onClick={handleBookEquipment}>
-                            Book Equipment
+                        <Button 
+                            variant="primary" 
+                            onClick={handleBookEquipment}
+                            disabled={bookingLoading}
+                        >
+                            {bookingLoading ? 'Booking...' : 'Book Equipment'}
                         </Button>
                     )}
                 </Modal.Footer>
