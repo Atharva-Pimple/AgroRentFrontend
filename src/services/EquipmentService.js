@@ -19,7 +19,6 @@ export function getSingleEquipment(equipmentId) {
             'Authorization': `Bearer ${token}`
         }
     };
-    
     return axios.get(`http://localhost:9090/equipment/${equipmentId}`, config);
 }
 
@@ -33,13 +32,8 @@ export function getOwnedEquipments() {
     return axios.get("http://localhost:9090/equipment/owned", config);
 }
 
-export function addEquipment(equipmentData) {
+export function addEquipment(formData) {
     const token = getToken();
-    const formData = new FormData();
-    formData.append('name', equipmentData.name);
-    formData.append('description', equipmentData.description);
-    formData.append('image', equipmentData.image);
-    formData.append('rentalPrice', equipmentData.rentalPrice);
     const config = {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -47,4 +41,35 @@ export function addEquipment(equipmentData) {
         }
     };
     return axios.post("http://localhost:9090/equipment", formData, config);
-} 
+}
+
+export function updateEquipment(equipmentId, formData) {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    };
+    return axios.put(`http://localhost:9090/equipment/${equipmentId}`, formData, config);
+}
+
+export function deleteEquipmentById(equipmentId) {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.delete(`http://localhost:9090/equipment/${equipmentId}`, config);
+}
+
+export function deleteEquipment() {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.delete(`http://localhost:9090/equipment/delete`, config);
+}

@@ -75,7 +75,6 @@ const Home = () => {
             ...prev,
             [name]: value
         }));
-        // Clear any previous booking messages when user changes dates
         setBookingMessage(null);
     };
 
@@ -136,10 +135,8 @@ const Home = () => {
                     text: response.data.message || 'Booking request submitted successfully!'
                 });
                 
-                // Refresh equipment list to update availability
                 fetchEquipment();
                 
-                // Close modal after a short delay to show success message
                 setTimeout(() => {
                     handleCloseModal();
                 }, 3000);

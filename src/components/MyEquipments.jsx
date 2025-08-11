@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getOwnedEquipments } from '../services/EquipmentService';
+import { getOwnedEquipments, deleteEquipment } from '../services/EquipmentService';
 import { getToken } from '../services/UserServices';
+import { toast } from 'react-toastify';
 import './MyEquipments.css';
 
 const MyEquipments = () => {
   const [equipments, setEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deletingEquipments, setDeletingEquipments] = useState(new Set());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +19,6 @@ const MyEquipments = () => {
     } else {
       fetchOwnedEquipments();
     }
-    // eslint-disable-next-line
   }, [navigate]);
 
   const fetchOwnedEquipments = async () => {
@@ -31,6 +32,35 @@ const MyEquipments = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteEquipment = async (equipmentId, equipmentName) => {
+    if (!window.confirm(`Are you sure you want to delete "${equipmentName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setDeletingEquipments(prev => new Set(prev).add(equipmentId));
+      
+      const response = await deleteEquipment();
+      toast.success(response.data.message || 'Equipment deleted successfully!');
+      
+      setEquipments(prevEquipments => 
+        prevEquipments.filter(equip => equip.id !== equipmentId)
+      );
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete equipment. Please try again.');
+    } finally {
+      setDeletingEquipments(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(equipmentId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleEditEquipment = (equipmentId) => {
+    navigate(`/edit-equipment/${equipmentId}`);
   };
 
   return (
@@ -74,6 +104,25 @@ const MyEquipments = () => {
                   <div className="price-container">
                     <span className="price-label">Rental Price:</span>
                     <span className="price">₹{equip.rentalPrice}/day</span>
+                  </div>
+                  <div className="card-actions">
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEditEquipment(equip.id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteEquipment(equip.id, equip.name)}
+                      disabled={deletingEquipments.has(equip.id)}
+                    >
+                      {deletingEquipments.has(equip.id) ? (
+                        <div className="button-spinner"></div>
+                      ) : (
+                        'Delete'
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>

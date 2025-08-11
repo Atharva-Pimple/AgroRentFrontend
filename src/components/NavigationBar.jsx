@@ -49,12 +49,10 @@ function Navigationbar() {
         <Navbar.Toggle aria-controls="agro-navbar" />
         <Navbar.Collapse id="agro-navbar">
           <Nav className="ms-auto align-items-lg-center">
-            {/* Always visible links */}
             <Nav.Link as={Link} to="/" className="px-3">Home</Nav.Link>
             <Nav.Link as={Link} to="/about" className="px-3">About Us</Nav.Link>
             <Nav.Link as={Link} to="/contact" className="px-3">Contact Us</Nav.Link>
 
-            {/* Role-based links */}
             {role === "ROLE_FARMER" && (
               <>
                 <Nav.Link as={Link} to="/my-equipments" className="px-3">My Equipments</Nav.Link>
@@ -70,7 +68,6 @@ function Navigationbar() {
               </>
             )}
 
-            {/* Sign In / Logout */}
             <Button variant="primary" className="ms-3 mt-2 mt-lg-0" onClick={handleAuthAction}>
               {isLoggedIn ? "Logout" : "Sign Up"}
             </Button>

@@ -18,7 +18,6 @@ const MyEquipmentBookings = () => {
     } else {
       fetchBookings();
     }
-    // eslint-disable-next-line
   }, [navigate]);
 
   const fetchBookings = async () => {

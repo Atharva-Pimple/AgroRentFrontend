@@ -7,7 +7,6 @@ export function registerUser(data){
     return axios.post("http://localhost:9090/auth/signUp", data)
 }
 
-
 export function loginUser(data){
     return axios.post("http://localhost:9090/auth/signIn",data);
 
@@ -37,6 +36,37 @@ export function getUserRole() {
     console.error("Invalid token", error);
     return null;
   }
+}
+
+// Admin methods
+export function getAllUsers() {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.get("http://localhost:9090/farmer/users", config);
+}
+
+export function disableUser(email) {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.patch(`http://localhost:9090/farmer/disable/${email}`, {}, config);
+}
+
+export function enableUser(email) {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.patch(`http://localhost:9090/farmer/enable/${email}`, {}, config);
 }
 
 

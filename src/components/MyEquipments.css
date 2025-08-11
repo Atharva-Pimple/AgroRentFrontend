@@ -1,231 +1,347 @@
 /* My Equipments Container */
 .my-equipments-container {
-  width: 100%;
+  padding: 2rem;
   min-height: 100vh;
-  padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .equipments-header {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 20px 0;
+  margin-bottom: 3rem;
 }
+
 .equipments-header h1 {
-  font-size: 2.5rem;
   color: #2c3e50;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
   font-weight: 700;
+  margin-bottom: 0.5rem;
 }
+
 .equipments-header p {
-  font-size: 1.1rem;
   color: #7f8c8d;
-  max-width: 600px;
-  margin: 0 auto;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
 }
+
 .equipments-actions {
   display: flex;
+  gap: 1rem;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  flex-wrap: wrap;
 }
+
 .action-btn {
-  padding: 12px 24px;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 25px;
-  font-weight: 600;
+  border-radius: 8px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
 }
+
 .add-btn {
-  background: linear-gradient(135deg, #27ae60 0%, #43cea2 100%);
+  background: #27ae60;
   color: white;
 }
+
 .add-btn:hover {
-  background: linear-gradient(135deg, #219150 0%, #36b88c 100%);
+  background: #229954;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
 }
+
 .bookings-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3498db;
   color: white;
 }
+
 .bookings-btn:hover {
-  background: linear-gradient(135deg, #4b5edc 0%, #5e3b8a 100%);
+  background: #2980b9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.error-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+}
+
+.no-equipments {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.no-equipments-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.no-equipments h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.no-equipments p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
 .equipments-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
-@media (max-width: 1200px) {
-  .equipments-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-}
-@media (max-width: 768px) {
-  .equipments-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-}
+
 .equipment-card {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
   overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e1e8ed;
 }
+
 .equipment-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
+
 .card-image-container {
   position: relative;
   height: 200px;
   overflow: hidden;
 }
+
 .equipment-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
+
 .equipment-card:hover .equipment-image {
   transform: scale(1.05);
 }
+
 .availability-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 6px 12px;
+  top: 10px;
+  right: 10px;
+  padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: white;
 }
+
 .availability-badge.available {
-  background: rgba(46, 204, 113, 0.9);
-  color: white;
+  background: #27ae60;
 }
+
 .availability-badge.unavailable {
-  background: rgba(231, 76, 60, 0.9);
-  color: white;
+  background: #e74c3c;
 }
+
 .card-content {
-  padding: 24px;
+  padding: 1.5rem;
 }
+
 .equipment-name {
-  font-size: 1.4rem;
-  font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 12px;
-  line-height: 1.3;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
 }
+
 .equipment-description {
   color: #7f8c8d;
-  line-height: 1.6;
-  margin-bottom: 20px;
   font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
 .card-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: flex-end;
+  gap: 1rem;
 }
+
 .price-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
+
 .price-label {
+  color: #7f8c8d;
   font-size: 0.85rem;
-  color: #95a5a6;
   font-weight: 500;
 }
+
 .price {
-  font-size: 1.3rem;
-  font-weight: 700;
   color: #27ae60;
-}
-.no-equipments {
-  text-align: center;
-  padding: 80px 20px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-.no-equipments-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
-}
-.no-equipments h3 {
-  color: #2c3e50;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-.no-equipments p {
-  color: #7f8c8d;
   font-size: 1.1rem;
-  margin-bottom: 30px;
+  font-weight: 700;
 }
-.loading-container {
+
+.card-actions {
   display: flex;
+  gap: 0.5rem;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  gap: 20px;
 }
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.error-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  gap: 20px;
-}
-.error-message {
-  color: #e74c3c;
-  font-size: 1.1rem;
-  text-align: center;
-  max-width: 400px;
-}
-.retry-button {
-  background: #3498db;
-  color: white;
+
+.edit-btn,
+.delete-btn {
+  padding: 0.5rem 1rem;
   border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
+  border-radius: 5px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
+  min-width: 80px;
+  position: relative;
 }
-.retry-button:hover {
+
+.edit-btn {
+  background: #3498db;
+  color: white;
+}
+
+.edit-btn:hover {
   background: #2980b9;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+}
+
+.edit-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .equipments-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .my-equipments-container {
+    padding: 1rem;
+  }
+  
+  .equipments-header h1 {
+    font-size: 2rem;
+  }
+  
+  .equipments-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .equipments-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .card-actions {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    flex: 1;
+  }
 }
