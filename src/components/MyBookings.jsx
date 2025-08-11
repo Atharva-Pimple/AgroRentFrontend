@@ -79,7 +79,6 @@ const MyBookings = () => {
     };
 
     const handleCancel = (bookingId) => {
-        // TODO: Implement cancel booking functionality
         console.log('Cancel booking:', bookingId);
         toast.info('Cancel functionality will be implemented soon.');
     };

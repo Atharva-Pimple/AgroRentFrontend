@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getToken } from "./UserServices";
 
+const API_URL = "http://localhost:9090/payment";
+
 export function createPaymentOrder(bookingId) {
     const token = getToken();
     const config = {
@@ -8,10 +10,10 @@ export function createPaymentOrder(bookingId) {
             'Authorization': `Bearer ${token}`
         }
     };
-    return axios.post(`http://localhost:9090/payment/create-payment/${bookingId}`, {}, config);
+    return axios.post(`${API_URL}/create-payment/${bookingId}`, {}, config);
 }
 
-export function verifyPayment({ bookingId, razorpayOrderId, razorpayPaymentId, razorpaySignature }) {
+export function verifyPayment(verificationData) {
     const token = getToken();
     const config = {
         headers: {
@@ -19,14 +21,15 @@ export function verifyPayment({ bookingId, razorpayOrderId, razorpayPaymentId, r
             'Content-Type': 'application/json'
         }
     };
-    return axios.post(
-        "http://localhost:9090/payment/verify",
-        {
-            bookingId,
-            razorpayOrderId,
-            razorpayPaymentId,
-            razorpaySignature
-        },
-        config
-    );
+    return axios.post(`${API_URL}/verify`, verificationData, config);
+}
+
+export function getEquipmentPayments() {
+    const token = getToken();
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    };
+    return axios.get(`${API_URL}/Equipments/payments`, config);
 }
